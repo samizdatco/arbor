@@ -1,0 +1,51 @@
+body{
+  background:black;
+  margin:0;
+  padding:10px 20px;
+  font:12px/17px "Gill Sans", Verdana, sans-serif;
+}
+#label{
+  color:#ccc;
+  border-top:1px solid white;
+  padding-top:3px;
+  width:800px;
+}
+#label a{
+  color:#666;
+  text-decoration:none;
+  float:right;
+}
+#label a:hover{
+  color:white;
+}
+a.another{
+  font:italic 12px/20px Georgia, sans-serif;
+  float:right;
+  color:#c30;
+  text-decoration:none;
+  position:absolute;
+  top:24px;
+  left:180px;
+}
+a.another:hover{
+  color:white;
+}
+img{
+  float:left;
+}
+#viewport{
+  background:url(echolalia.png) no-repeat 8px 0;
+}
+
+a.back{
+  display:block;
+  float:left;
+  background:url(home-arrow.png) 1px left;
+  width:17px;
+  height:18px;
+  margin-top:12px;
+  text-indent:-99999px;
+}
+a.back:hover{
+  background:url(home-arrow.png) -17px left;
+}

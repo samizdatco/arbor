@@ -1,0 +1,1 @@
+{"_id":"cube","_rev":"1-9405f221c6d6391d7950c28b268f767d","sys":{"repulsion":2600,"friction":0.5,"stiffness":512,"gravity":false},"src":"{color:none, label:\u00b7}\n-> {color:#aa9}\n\n1 -- 2\n3 -- 4\n2 -- 3\n4 -- 1\n2 -- 5\n5 -- 6\n6 -- 1\n5 -- 7\n7 -- 3\n7 -- 8\n8 -- 4\n8 -- 6\n\n","example":"doodle","title":"Cube"}

@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>arbor.js » halfviz</title>
+	<meta name="generator" content="TextMate http://macromates.com/">
+	<meta name="author" content="Christian Swinehart">
+	<!-- Date: 2010-12-20 -->
+	<link rel="stylesheet" href="style/halfviz.css" type="text/css" charset="utf-8">
+</head>
+<body>
+
+  <div id="intro">
+    <h1>about <a href="#">&times;</a></h1>
+    <p>HalfViz is a graph visualization environment with a not-coincidental similarity to
+       AT&amp;T’s <em>Nevermind</em>-era, C-language classic <a target="_blank" href="http://graphviz.org">GraphViz</a>.</p>
+    <p>It takes one of the central good ideas of GraphViz – the <code><a target="_blank" href="http://graphviz.org/doc/info/lang.html">.dot</a></code> 
+       graph description language – and scales things back in the name of simplicity of implementation
+       and brevity of syntax. Remember, <a target="_blank" href="http://www.instapaper.com/go/111151108/text">worse is better</a> these days.</p>
+    <p>The result is the <a href="#" class="help">halftone</a> language; a <code>dot</code>-inspired, mostly-declarative 
+       format for describing graph relationships and styling the resulting nodes and edges.
+  </div>
+
+  <div id="rtfm">
+    <h1><span>the halftone language</span><a href="#">&times;</a></h1>
+    <h2><a href="#" class="active">Basics</a><a href="#">Nodes</a><a href="#">Edges</a><a href="#">Styles</a></h2>
+
+    <div class='tfs'>
+      <div class="basics">
+        <p>In the editor to the right you can describe your graph symbolically. As you type, the
+           visualization will update to reflect the nodes and connections you have defined.</p>
+        <h3>graphs</h3>
+        <p>Your code 
+           is read line-by-line and matched for patterns of the form:</p>
+        <code class='block'><em>name1</em> -&gt; <em>name2</em></code>
+        <p>The names can be single or multiple words and can include digits, punctuation, or
+           space characters. Avoid using curly braces <code>{}</code> since those characters are used in styling
+           the graph.</p>
+        <h3>lone nodes</h3>
+        <p>If you want to create a node without connecting it to any of the others, simply list it
+           on a line by itself: </p>
+        <code class='block'><em>name3</em></code>
+        <h3>comments</h3>
+        <p>The semicolon acts as a comment character; anything to the right of it on a line
+           will be ignored.</p>
+
+        <h3>a simple example</h3>
+        <code class='block'>
+          <b>;</b><br />
+          <b>; ostracism in achewood, ca</b><br />
+          <b>;</b><br />
+          <em>roast beef</em> -&gt; <em>ray</em><br />
+          <em>ray</em> -&gt; <em>téodor</em><br />
+          <em>téodor</em> -&gt; <em>roast beef</em><br />
+          <em>pat</em> <b>; pat is all alone</b>
+        </code>
+      </div>
+
+      <div class="nodes">
+        <p>By default all nodes are displayed as grey boxes with the node name as the
+           text label. You can change this for individual nodes by using this dictionary-like
+           notation: </p>
+        <code class='block'>
+          <em>mynode</em> {<em>color</em>:<em>red</em>, <em>label</em>:<em>a simple red box</em>}
+          </code>
+        <h3>colors</h3>
+        <p>The node’s <code>color</code> can be set to any value that is a valid CSS color. For
+           example, all the lines below are equivalent:</p>
+        <code class='block'>
+          <em>rednode1</em> {<em>color</em>:<em>red</em>}<br />
+          <em>rednode2</em> {<em>color</em>:<em>#f00</em>}<br />
+          <em>rednode3</em> {<em>color</em>:<em>#ff0000</em>}<br />
+          </code>
+        <p>Setting the color to the special value <code>none</code> will draw the node’s
+           label in black on a white background:
+          </p>
+        <code class="block">
+          <em>textnode</em> {<em>color</em>:<em>none</em>, <em>label</em>:<em>just some text</em>}
+          </code>
+        <h3>labels</h3>
+        <p>The node’s displayed text <code>label</code> can be changed to any string that doesn’t
+           use the <code>{}</code> characters. It can also be set to nothing at all:</p>
+        <code class='block'>
+          <em>longwinded</em> {<em>label</em>:<em>a verbose name</em>}<br />
+          <em>empty</em> {<em>label</em>:} <b>; don’t label this node</b><br />
+          </code>
+        <p>Note that labels can be multiple words and don't need to be surrounded with 
+           quotation marks.</p>
+        <h3>shapes</h3>
+        <p>A node’s <code>shape</code> can be either <code>dot</code> or <code>box</code> (the
+           default). In both cases the size of the shape will be determined by the length of 
+           the node’s label text.</p>
+        <code class='block'>
+          <em>small dot</em> {<em>shape</em>:<em>dot</em>, <em>label</em>:}<br />
+          <em>very very large dot</em> {<em>shape</em>:<em>dot</em>}<br />
+          <em>rounded rectangle</em> {<em>shape</em>:<em>box</em>}
+          </code>
+      </div>
+      
+      <div class="edges">
+        <p>Edges can be either directed (and drawn with an arrow) or un-directed (and 
+           drawn with an unadorned line). This is controlled by the characters you enter
+           for the edge:</p>
+        <code class="block">
+           <em>a</em> -&gt; <em>b</em> <b>; drawn with an arrow</b><br />
+           <em>c</em> -- <em>d</em> <b>; drawn with a line</b>
+          </code>
+        <p>As with nodes, edges can be styled by appending an options <code>{}</code> block to the 
+           edge definition:</p>
+        <code class="block">
+          <em>src</em> -&gt; <em>dst</em> {<em>color</em>:<em>plum</em>, <em>weight</em>:<em>2</em>}
+          </code>
+          <p>If no style options are specified, the edge will be drawn in grey with a line weight of 1px.</p>
+        <h3>colors</h3>
+         <p>The <code>color</code> property can be set to the same variety of formats demonstrated in
+         the Nodes section.</p>
+
+        <h3>line weights</h3>
+        <p>The <code>weight</code> property can be set to a number controlling the width of the line 
+           in pixels.</p>
+      </div>
+      
+      <div class="styles">
+        <p>If you wish to use the same formatting for a number of nodes or edges, you can save some
+        typing by modifying the default style properties which apply to graph elements that aren’t 
+        explicitly styled.</p>
+        <h3>node styles</h3>
+        <p>The default node style can be set by entering an options block on a line by itself:</p>
+        <code class="block">
+          {<em>color</em>:<em>goldenrod</em>}
+          </code>
+        <p>This will apply to any nodes defined on subsequent lines that do not set a <code>color</code> 
+           for themselves.</p>
+        <p>The defaults can be changed multiple times. For example, to create two red 
+           nodes and two blue ones, try:</p>
+        <code class="block">
+          {<em>color</em>:<em>red</em>}<br />
+          <em>a</em> <b>; will both be red</b><br />
+          <em>b</em> <b>;</b><br />
+          {<em>color</em>:<em>blue</em>}<br />
+          <em>c</em> <b>; will both be blue</b><br />
+          <em>d</em> <b>;</b>
+          </code>
+          <p>The default node styles will also apply to nodes created in edge definitions that are
+             not explicitly styled elsewhere in the code.</p>
+        <h3>edge styles</h3>
+        <p>Setting the default edge style is similar, but the options block must follow a lone arrow:</p>
+        <code class="block">
+          -> {<em>color</em>:<em>cyan</em>, <em>weight</em>:<em>6</em>}
+          </code>
+        <p>Unstyled edges defined on subsequent lines will inherit the specified properties. </p>
+      </div>
+    </div>
+    <p>&nbsp;</p>
+      
+  </div>
+
+  <div id="halfviz">
+    <canvas id="viewport" width="800" height="600"></canvas>
+    <div id="editor">
+      <div class="io">
+        <div class="ctrl"><a href="#" class="new">clear</a><a class="examples" href="#">examples <span></span></a></div>
+        <ul class="dialog"></ul>
+      </div>
+      <textarea id="code"></textarea>  
+    </div>
+    <div id="grabber"></div>
+  </div>  
+
+  <div id="dashboard">
+    <a href="#" class="about active"><div class="popup"><img src="style/nub.png">About</div>about halfviz</a>
+    <a href="#" class="help">syntax help</a>
+    <ul class="controls">
+      <li class="stiffness">spring tension <span class="frob">10,000</span></li>
+      <li class="repulsion">node repulsion <span class="frob">10,000</span></li>
+      <li class="friction">friction <span class="frob">20%</span></li>
+      <li class="gravity">gravity <span class="toggle">.</span></li>
+    </ul>
+  </div>
+
+
+  <script src="../_/jquery.1.4.4.min.js"></script>
+  <script src="../_/jquery.address-1.3.1.min.js"></script>
+  <script src="../../lib/arbor.js"></script>
+  <script src="../_/graphics.js"></script>
+
+  <!-- the halfviz source, broken out one ‘class’ per file -->
+  <script src="src/dashboard.js"></script>
+  <script src="src/help.js"></script>
+  <script src="src/io.js"></script>
+  <script src="src/parseur.js"></script>
+  <script src="src/renderer.js"></script>
+  
+  <!-- the main driver code: start here -->
+  <script src="src/halfviz.js"></script> 
+
+  
+</body>
+</html>

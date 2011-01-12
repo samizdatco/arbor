@@ -1,0 +1,380 @@
+/* http://meyerweb.com/eric/tools/css/reset/
+   v1.0 | 20080212 */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+
+/* remember to highlight inserts somehow! */
+ins {
+	text-decoration: none;
+}
+del {
+	text-decoration: line-through;
+}
+
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* end css reset */
+
+
+
+body{
+  font-family: "athelas-1","athelas-2",serif;
+  font-size:15px;
+  line-height:20px;
+  color:#330;
+}
+
+#arbor{
+  position:absolute;
+  min-height:100%;
+  min-width:100%;
+}
+#nav{
+  background:transparent url(logo.png) 40px 0 no-repeat;
+  font-style:italic;
+  color:#887;
+  padding:17px 0 0 160px;
+  height:30px;
+  margin:9px 0px 0 0px;
+  border-bottom:1px solid #bbb;
+}
+
+#nav .back{
+  background:url(back-arrow.png) 6px 6px no-repeat;
+  width:140px;
+  height:36px;
+  display:none;
+  position:absolute;
+  left:10px;
+  top:11px;
+}
+
+#nav .back.active{
+  display:block;
+}
+
+#sitemap{
+/*  margin:8px 0 0 0;*/
+}
+
+#sitemap.linkable{
+  cursor:pointer;
+}
+
+#footer{
+  color:#333;
+  background:white;
+  position:absolute;
+  bottom:10px;
+  left:160px;
+}
+
+#footer a{
+  text-decoration:none;
+  color:#665;
+}
+
+#footer a:hover{
+  color:#ad621c;
+}
+
+
+#docs > div{
+  
+  padding:0 0 60px 0;
+}
+
+#docs{
+  position:relative;
+  margin:20px 0 0 160px;
+  padding:0 70px 0 0;
+/*  border-right:1px solid #ccc;*/
+}
+
+#docs h1{
+  margin:20px 0 2px 0;
+  color:#998;
+  font:16px "Gill Sans", Helvetica, Arial, sans-serif;
+  color:#ad621c;
+}
+
+/*#docs h1{
+  margin:20px 0 2px -150px;
+  width:134px;
+  color:#998;
+  font:16px "Gill Sans", Helvetica, Arial, sans-serif;
+  text-align:right;
+}
+*/
+
+#docs dl + h1{
+  margin-top:30px;
+  padding-top:10px;
+}
+
+
+#docs h2{
+  margin:0;
+  position:absolute;
+  left:-150px;
+  width:134px;
+  text-transform:uppercase;
+  text-align:right;
+  font-size:12px;
+/*  font-weight:normal;*/
+  letter-spacing:1px;
+  color:#998;  
+}
+
+#docs h2 a{
+  color:black;
+  text-decoration:none;
+  font-size:130%;
+}
+
+#docs > div > p{
+  display:block;
+  text-indent:1em;
+  width:380px;
+}
+
+#docs p.code{
+/*  width:999px;*/
+  display:block;
+  margin:13px;
+  font:12px Monaco, sans-serif;
+  text-indent:0;
+  color:#665;
+}
+
+#docs p code{
+  font:12px Monaco, sans-serif;
+  color:#665;
+}
+#docs p.code+p{
+  text-indent:0;
+}
+
+#docs h2:first-child+p{
+  margin-top:0;
+}
+
+#docs .figure + p,
+#docs h2+p{
+  text-indent:0;
+}
+
+
+#docs b{
+  text-transform:uppercase;
+  font-size:80%;
+}
+
+
+#docs .figure{
+  position:absolute;
+  left:440px;
+}
+
+dl{
+  margin:0 0 16px 0;
+}
+
+#docs dl code{
+  font:12px Monaco, Courier, monospace;
+}
+dt{
+  margin-right:2px;
+  font-weight:bold;
+  min-width:90px;
+}
+
+dt em{
+  font-weight:normal;
+  margin:0 2px;
+}
+
+dd{
+  font-style:italic;
+  margin:0 0 0 10px;
+  display:none;
+}
+
+dl.datastructure dt{
+  display:inline-block;
+  min-width:50px;
+}
+dl.datastructure dd{
+  display:inline-block;
+}
+
+dt:hover{
+  cursor:pointer;
+  text-decoration:underline;
+}
+dt:hover em{
+  cursor:default;
+}
+
+dl.datastructure dt:hover{
+  cursor:default;
+  text-decoration:none;
+}
+
+dd .desc{
+  font-style:normal;
+  margin:10px 0 10px -10px;
+  width:380px;
+}
+
+dd .desc .bang{
+  color:#bd1f00;
+  font:24px Arial;
+  position:absolute;
+  left:-20px;
+  margin-top:5px;
+}
+
+#docs dd p{
+  text-indent:-10px;
+  margin:0 0 2px 0;
+  width:380px;
+}
+
+#docs .lead-in{
+  margin-bottom:16px;  
+}
+#docs .lead-in p{
+  margin:0;
+  text-indent:0;
+  width:380px;
+  font-style:italic;
+}
+#docs .lead-in .more{
+  color:#AD621C;
+  text-decoration:none;
+  font-style:italic;
+}
+#docs .lead-in .more:hover{
+  text-decoration:underline;
+}
+#docs .lead-in .more ~ *{
+  display:none;
+}
+
+#docs .lead-in p.code{
+  width:570px;
+  font-style:normal;
+  margin:10px;
+}
+
+#docs .lead-in hr{
+  margin:0px 0 12px 0px;
+  border:0;
+  border-top:1px solid #aa9;
+  border-bottom:1px solid #aa9;
+  height:1px;
+  width:525px;
+}
+
+
+
+#docs dd p code.arg{
+  color:#ad621c;
+}
+
+#docs dd hr{
+  margin:-4px 0 12px -10px;
+  border:0;
+  border-top:1px solid #aa9;
+  width:390px;
+}
+
+#docs .lead-in ul{
+  margin:0 0 20px 13px;
+  font-style:italic;
+  color:#998;
+}
+#docs .lead-in ul em{
+  color:black;
+  font-style:normal;
+  width:60px;
+  display:inline-block;
+  text-align:right;
+}
+
+#docs .lead-in ul b{
+  size:60%;
+  color:#950;
+  text-transform:none;
+  font-weight:normal;
+  font:13px "Gill Sans", Helvetica, Arial, sans-serif;
+  display:inline-block;
+  width:40px;
+  text-align:right;
+  margin-right:12px;
+}
+#docs .lead-in p a{
+  color:#ad621c;
+  text-decoration:none;
+}
+#docs .lead-in p a:hover{
+  text-decoration:underline;
+}
+#docs .more.less{
+/*  border:1px solid red;*/
+font-size:9px;
+  line-height:4px;
+  margin:0;
+  padding:0;
+}
+
+.sect{
+    text-transform:uppercase;
+    font-size:12px;
+    font-weight:bold;
+    letter-spacing:1px;
+    color:#998;  
+    border-top:1px solid #998;
+    margin:60px 85px 0 0;
+  
+}
