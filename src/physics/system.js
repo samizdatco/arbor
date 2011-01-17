@@ -4,7 +4,7 @@
 // the main controller object for creating/modifying graphs 
 //
 
-  var ParticleSystem = function(repulsion, stiffness, friction, centerGravity, targetFps, dt){
+  var ParticleSystem = function(repulsion, stiffness, friction, centerGravity, targetFps, dt, precision){
   // also callable with ({stiffness:, repulsion:, friction:, timestep:, fps:, dt:, gravity:})
     
     var _changes=[]
@@ -25,6 +25,7 @@
       dt = _p.dt
       stiffness = _p.stiffness
       centerGravity = _p.gravity
+      precision = _p.precision
     }
 
     friction = isNaN(friction) ? .5 : friction
@@ -32,9 +33,10 @@
     targetFps = isNaN(targetFps) ? 55 : targetFps
     stiffness = isNaN(stiffness) ? 600 : stiffness
     dt = isNaN(dt) ? 0.02 : dt
+    precision = isNaN(precision) ? .6 : precision
     centerGravity = (centerGravity===true)
     var _systemTimeout = (targetFps!==undefined) ? 1000/targetFps : 1000/50
-    var _parameters = {repulsion:repulsion, stiffness:stiffness, friction:friction, dt:dt, gravity:centerGravity, timeout:_systemTimeout}
+    var _parameters = {repulsion:repulsion, stiffness:stiffness, friction:friction, dt:dt, gravity:centerGravity, precision:precision, timeout:_systemTimeout}
     var _energy
 
     var state = {
@@ -50,10 +52,13 @@
     var that={
       parameters:function(newParams){
         if (newParams!==undefined){
+          if (!isNaN(newParams.precision)){
+            newParams.precision = Math.max(0, Math.min(1, newParams.precision))
+          }
           $.each(_parameters, function(p, v){
             if (newParams[p]!==undefined) _parameters[p] = newParams[p]
           })
-          state.kernel.physicsModified(_parameters)          
+          state.kernel.physicsModified(newParams)
         }
         return _parameters
       },

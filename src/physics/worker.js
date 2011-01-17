@@ -5,6 +5,7 @@
 // Kernel object can deal with
 //
 importScripts('atoms.js');
+importScripts('barnes-hut.js');  
 importScripts('physics.js');  
 // alias over the missing jquery utils so we can run in a worker
 $ = {
@@ -78,7 +79,7 @@ var PhysicsWorker = function(){
 
       // but stop the simulation when energy of the system goes below a threshold
       var sysEnergy = _physics.systemEnergy()
-      if (sysEnergy.max < 0.01){
+      if ((sysEnergy.mean + sysEnergy.max)/2 < 0.05){
         if (_lastTick===null) _lastTick=new Date().valueOf()
         if (new Date().valueOf()-_lastTick>1000){
           that.stop()

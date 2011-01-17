@@ -71,7 +71,7 @@
   }    
 
   $(document).ready(function(){
-    var sys = arbor.ParticleSystem(1000, 1000, 0.5) // create the system with sensible stiffness/repulsion/friction
+    var sys = arbor.ParticleSystem(1000, 800, 0.5) // create the system with sensible repulsion/stiffness/friction
     sys.renderer = DeadSimpleRenderer("#viewport") // our newly created renderer will have its .init() method called shortly by sys...
 
     // pick a random datafile and load it

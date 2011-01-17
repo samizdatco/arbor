@@ -26,7 +26,7 @@
         <p>Parameters for the physics simulation can be set at creation-time 
           by calling the constructor with the arguments:</p>
         <p class="code">
-          arbor.ParticleSystem(repulsion, stiffness, friction, gravity, fps, dt)
+          arbor.ParticleSystem(repulsion, stiffness, friction, gravity, fps, dt, precision)
         </p>
         <p>The parameters and their defaults are:</p>
         <ul>
@@ -36,7 +36,8 @@
           <li><em>gravity </em><b>false</b> an additional force attracting nodes to the origin </li>
           <li><em>fps </em><b>55</b> frames per second </li>
           <li><em>dt </em><b>0.02</b> timestep to use for stepping the simulation </li>
-
+          <li><em>precision </em><b>0.6</b> accuracy vs. speed in force calculations<br>
+              <em>&nbsp;</em><b>&nbsp;</b> (zero is fast but jittery, one is smooth but cpu-intensive)</li>
         </ul>
         <p>The defaults will be used for any omitted arguments. Parameters can also be passed 
            in an object literal. For reference, the following calls are all equivalent:</p>

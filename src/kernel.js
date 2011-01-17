@@ -43,7 +43,7 @@
           _physics.onerror = function(e){ trace('physics:',e) }
           _physics.postMessage({type:"physics", 
                                 physics:objmerge(params, 
-                                                {timeout:Math.ceil(params.timeout*.5)}) })
+                                                {timeout:Math.ceil(params.timeout)}) })
         }else{
           trace("couldn't use web workers, be careful...")
           _physics = Physics(params.dt, params.stiffness, params.repulsion, params.friction, that.system._updateGeometry)
@@ -78,7 +78,6 @@
           if (USE_WORKER){
             clearInterval(_screenInterval)
             _screenInterval = setInterval(that.screenUpdate, param.timeout)
-            param.timeout *= .5
           }else{
             // clear the old interval then let the call to .start set the new one
             clearInterval(_tickInterval)
@@ -173,16 +172,17 @@
 
         // but stop the simulation when energy of the system goes below a threshold
         var sysEnergy = _physics.systemEnergy()
-        if (sysEnergy.max < 0.01 && !stillActive){
-          if (_lastTick===null) _lastTick=now.valueOf()
-          if (now.valueOf()-_lastTick>1000){
-            trace('stopping')
+        if ((sysEnergy.mean + sysEnergy.max)/2 < 0.05){
+          if (_lastTick===null) _lastTick=new Date().valueOf()
+          if (new Date().valueOf()-_lastTick>1000){
+            // trace('stopping')
             clearInterval(_tickInterval)
             _tickInterval = null
           }else{
             // trace('pausing')
           }
         }else{
+          // trace('continuing')
           _lastTick = null
         }
       },

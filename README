@@ -39,4 +39,25 @@ Getting Started
 
 The docs folder contains a sample project that demonstrates some of the
 basic idioms for working with the library to build a visualization. More
-detailed documentation can be found at http://arborjs.org/reference
+detailed documentation can be found at http://arborjs.org/reference.
+
+Colophon
+--------
+
+Arbor’s design is heavily influenced by Jeffrey Bernstein’s excellent
+Traer Physics[1] library for Processing. In addition, much of the
+physics code has been adapted from Dennis Hotson’s springy.js[2]. The
+Barnes-Hut n-body implementation is based on Tom Ventimiglia and Kevin 
+Wayne’s vivid description[3] of the algorithm.
+
+Thanks to all for releasing such elegantly simple and comprehensible
+code.
+
+[1] <http://murderandcreate.com/physics/>
+[2] <https://github.com/dhotson/springy>
+[3] <http://arborjs.org/docs/barnes-hut>
+
+License
+-------
+
+Arbor is released under the MIT license. http://en.wikipedia.org/wiki/MIT_License

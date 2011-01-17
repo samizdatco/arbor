@@ -40,7 +40,7 @@ YUI_OPTIONS = "--type=js"
 def make_lib():
   if not os.path.exists('lib'): os.mkdir('lib')
   targets = {
-    "arbor.js": ["etc.js", "kernel.js", "physics/atoms.js", "physics/system.js", "physics/physics.js" ],
+    "arbor.js": ["etc.js", "kernel.js", "physics/atoms.js", "physics/system.js", "physics/barnes-hut.js", "physics/physics.js" ],
     "arbor-tween.js": ["etc.js","graphics/colors.js", "tween/easing.js", "tween/tween.js"],
     "arbor-graphics.js": ["etc.js", "graphics/colors.js", "graphics/primitives.js", "graphics/graphics.js" ],
   }
@@ -203,10 +203,9 @@ def main():
       if should_get.lower().startswith('y'):
         get_yui()
       else:
+        print "Please adjust the YUI_PATH variable in the script to point to the proper command"
         sys.exit(1)
     YUI_PATH = os.path.abspath('./yui')
-    # print "Please adjust the YUI_PATH variable in the script to point to the proper command"
-    # sys.exit(1)
 
   os.chdir("%s/.."%os.path.dirname(os.path.abspath(__file__)))
   make_lib()

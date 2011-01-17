@@ -5,6 +5,7 @@
 //
 
   var Physics = function(dt, stiffness, repulsion, friction, updateFn){
+    var bhTree = BarnesHutTree() // for computing particle repulsion
     var active = {particles:{}, springs:{}}
     var free = {particles:{}}
     var particles = []
@@ -21,14 +22,19 @@
       friction:(friction!==undefined)? friction : .3,
       gravity:false,
       dt:(dt!==undefined)? dt : 0.02,
+      theta:.4, // the criterion value for the barnes-hut s/d calculation
       
       init:function(){
         return that
       },
 
       modifyPhysics:function(param){
-        $.each(['stiffness','repulsion','friction','gravity','dt'], function(i, p){
+        $.each(['stiffness','repulsion','friction','gravity','dt','precision'], function(i, p){
           if (param[p]!==undefined){
+            if (p=='precision'){
+              that.theta = 1-param[p]
+              return
+            }
             that[p] = param[p]
              
             if (p=='stiffness'){
@@ -45,7 +51,12 @@
         var id = c.id
         var mass = c.m
 
-        var randomish_pt = new Point(-3+3*Math.random(),-3+3*Math.random())
+        var w = _bounds.bottomright.x - _bounds.topleft.x
+        var h = _bounds.bottomright.y - _bounds.topleft.y
+        var randomish_pt = new Point(_bounds.topleft.x + w*Math.random(),
+                                     _bounds.topleft.y + h*Math.random())
+
+        
         active.particles[id] = new Particle(randomish_pt, mass);
         active.particles[id].connections = 0
         free.particles[id] = active.particles[id]
@@ -154,17 +165,22 @@
         })
 
       },
+      
+      
       // Physics stuff
       eulerIntegrator:function(dt){
-        that.applyRepulsion();
-        that.applySprings();
-        that.applyCenterDrift();
-        if (that.gravity) that.applyCenterGravity();
-        that.updateVelocity(dt);
-        that.updatePosition(dt);
+        if (that.repulsion>0){
+          if (that.theta>0) that.applyBarnesHutRepulsion()
+          else that.applyBruteForceRepulsion()
+        }
+        if (that.stiffness>0) that.applySprings()
+        that.applyCenterDrift()
+        if (that.gravity) that.applyCenterGravity()
+        that.updateVelocity(dt)
+        that.updatePosition(dt)
       },
 
-      applyRepulsion:function(){
+      applyBruteForceRepulsion:function(){
         $.each(active.particles, function(id1, point1){
           $.each(active.particles, function(id2, point2){
             if (point1 !== point2){
@@ -185,7 +201,24 @@
           })          
         })
       },
+      
+      applyBarnesHutRepulsion:function(){
+        if (!_bounds.topleft || !_bounds.bottomright) return
+        var bottomright = new Point(_bounds.bottomright)
+        var topleft = new Point(_bounds.topleft)
 
+        // build a barnes-hut tree...
+        bhTree.init(topleft, bottomright, that.theta)        
+        $.each(active.particles, function(id, particle){
+          bhTree.insert(particle)
+        })
+        
+        // ...and use it to approximate the repulsion forces
+        $.each(active.particles, function(id, particle){
+          bhTree.applyForces(particle, that.repulsion)
+        })
+      },
+      
       applySprings:function(){
         $.each(active.springs, function(id, spring){
           var d = spring.point2.p.subtract(spring.point1.p); // the direction of the spring

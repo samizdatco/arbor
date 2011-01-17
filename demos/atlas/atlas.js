@@ -103,7 +103,6 @@
             ctx.fillText(label||"", pt.x, pt.y+4)
           }
         })    		
-
       },
       
       resize:function(){

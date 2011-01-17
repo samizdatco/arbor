@@ -1,0 +1,16 @@
+Arbor.js Changes
+----------------
+
+
+Version 0.91 | 17 jan 2011
+--------------------------
+
+  * Now supplementing brute-force repulsion calculations with the more-efficient
+    (but noisier) barnes-hut algorithm. Use the ParticleSystem's .precision
+    parameter to control the accuracy/speed trade-off.
+
+
+Version 0.9 | 12 jan 2011
+-------------------------
+
+  * Initial release
