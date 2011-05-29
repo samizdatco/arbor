@@ -94,8 +94,9 @@
           node.name = name
           state.names[name] = node
           state.nodes[node._id] = node;
+          
+          _changes.push({t:"addNode", id:node._id, m:node.mass, fixed:node.fixed, p:node.p})
 
-          _changes.push({t:"addNode", id:node._id, m:node.mass})
           that._notify();
           return node;
 
