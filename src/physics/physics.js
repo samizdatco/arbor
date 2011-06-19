@@ -53,12 +53,13 @@
 
         var w = _bounds.bottomright.x - _bounds.topleft.x
         var h = _bounds.bottomright.y - _bounds.topleft.y
-        var randomish_pt = new Point(_bounds.topleft.x + w*Math.random(),
-                                     _bounds.topleft.y + h*Math.random())
+        var randomish_pt = new Point((c.x != null) ? c.x: _bounds.topleft.x + w*Math.random(),
+                                     (c.y != null) ? c.y: _bounds.topleft.y + h*Math.random())
 
         
         active.particles[id] = new Particle(randomish_pt, mass);
         active.particles[id].connections = 0
+        active.particles[id].fixed = (c.f===1)
         free.particles[id] = active.particles[id]
         particles.push(active.particles[id])        
       },

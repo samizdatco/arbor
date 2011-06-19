@@ -77,9 +77,6 @@
       },
 
       addNode:function(name, data){
-        // return that.newNode(name,data)
-        
-        // trace(name)
         data = data || {}
         var priorNode = state.names[name]
         if (priorNode){
@@ -89,13 +86,19 @@
           // the data object has a few magic fields that are actually used
           // by the simulation:
           //   'mass' overrides the default of 1
-          //   'x' & 'y' will manually set a starting position (defaults to the origin)
+          //   'fixed' overrides the default of false
+          //   'x' & 'y' will set a starting position rather than 
+          //             defaulting to random placement
+          var x = (data.x!=undefined) ? data.x : null
+          var y = (data.y!=undefined) ? data.y : null
+          var fixed = (data.fixed) ? 1 : 0
+
           var node = new Node(data)
           node.name = name
           state.names[name] = node
           state.nodes[node._id] = node;
 
-          _changes.push({t:"addNode", id:node._id, m:node.mass})
+          _changes.push({t:"addNode", id:node._id, m:node.mass, x:x, y:y, f:fixed})
           that._notify();
           return node;
 
@@ -279,6 +282,7 @@
           var oldNode = that.getNode(name)
           // should probably merge any x/y/m data as well...
           // if (oldNode) $.extend(oldNode.data, nodeData)
+          
           if (oldNode) oldNode.data = nodeData
           else changes.added.nodes.push( that.addNode(name, nodeData) )
           
@@ -288,7 +292,6 @@
         if (branch.edges) $.each(branch.edges, function(src, dsts){
           var srcNode = that.getNode(src)
           if (!srcNode) changes.added.nodes.push( that.addNode(src, {}) )
-          
 
           $.each(dsts, function(dst, edgeData){
 
