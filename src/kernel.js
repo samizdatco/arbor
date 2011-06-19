@@ -5,10 +5,11 @@
 //
     
   var Kernel = function(pSystem){
-  
-    var USE_WORKER = (window.Worker !== undefined)
-    // var USE_WORKER = false
-    
+    // in chrome, web workers aren't available to pages with file:// urls
+    var chrome_local_file = window.location.protocol == "file:" &&
+                            navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+    var USE_WORKER = (window.Worker !== undefined && !chrome_local_file)    
+
     var _physics = null
     var _tween = null
     var _fpsWindow = [] // for keeping track of the actual frame rate
