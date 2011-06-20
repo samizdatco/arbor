@@ -21,9 +21,10 @@ from datetime import datetime
 import shutil
 
 
-
-
-
+# apparently there is no stable download link for <most-recent-version> of 
+# yui, so this could url well be stale. if so you can try looking for a 
+# new link at: http://yuilibrary.com/downloads/#yuicompressor
+YUI_LIB_URL = "http://yui.zenfs.com/releases/yuicompressor/yuicompressor-2.4.6.zip"
 
 # your system configuration may vary...
 YUI_PATH = "/usr/local/bin/yui"
@@ -176,7 +177,7 @@ def get_yui():
   from cStringIO import StringIO
 
   print "fetching yui compressor"
-  data = urlopen('http://yuilibrary.com/downloads/yuicompressor/yuicompressor-2.4.2.zip')
+  data = urlopen(YUI_LIB_URL)
   yuizip = ZipFile(StringIO(data.read()))
   jarpath = [f for f in yuizip.namelist() if 'build/yuicompressor' in f][0]
   

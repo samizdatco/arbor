@@ -41,6 +41,11 @@ The docs folder contains a sample project that demonstrates some of the
 basic idioms for working with the library to build a visualization. More
 detailed documentation can be found at http://arborjs.org/reference.
 
+In addition, the demos folder contains standalone versions of the demos
+at arborjs.org. But since all of them use xhr to fetch their data, you'll 
+still need to view them from an http server. If you don't have a copy of
+apache handy, use the demo-server.sh script to create a local server.
+
 Colophon
 --------
 
@@ -56,6 +61,13 @@ code.
 [1] <http://murderandcreate.com/physics/>
 [2] <https://github.com/dhotson/springy>
 [3] <http://arborjs.org/docs/barnes-hut>
+
+Contribute
+----------
+
+Code submissions are greatly appreciated and highly encouraged. Please send
+pull requests with fixes/enhancements/etc. to samizdatco on github. The 
+oldschool may also pipe their diff -u output to info@arborjs.org.
 
 License
 -------

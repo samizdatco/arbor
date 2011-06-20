@@ -1,6 +1,18 @@
 Arbor.js Changes
 ----------------
 
+Version 0.92 | 19 jun 2011
+--------------------------
+
+  * Creating nodes with an initial x/y or fixed position now works as advertised
+
+  * Calling ParticleSystem's .screen() method without arguments will now 
+    return an object with fields describing the current screen state
+
+  * Fix for problems on chrome when running from file:// urls
+  
+  * Added a shell script to run a local http server so the demos will work without
+    needing to be hosted somewhere
 
 Version 0.91 | 17 jan 2011
 --------------------------
