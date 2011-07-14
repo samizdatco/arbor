@@ -578,22 +578,28 @@
     
     state.kernel = Kernel(that)
     state.tween = state.kernel.tween || null
+
+
+
     
     // some magic attrs to make the Node objects phone-home their physics-relevant changes
+
+    var RoboPoint = function (n) {
+      this._n = n;
+    }
+    Object.defineProperty(RoboPoint.prototype, "x", {
+      get: function(){ return this._n._p.x; },
+      set: function(newX){ state.kernel.particleModified(this._n._id, {x:newX}) }
+    })
+    Object.defineProperty(RoboPoint.prototype, "y", {
+      get: function(){ return this._n._p.y; },
+      set: function(newY){ state.kernel.particleModified(this._n._id, {y:newY}) }
+    })
+    RoboPoint.prototype = Point.prototype;
+
     Object.defineProperty(Node.prototype, "p", {
       get: function() { 
-        var self = this
-        var roboPoint = {}
-        Object.defineProperty(roboPoint, "x", {
-          get: function(){ return self._p.x; },
-          set: function(newX){ state.kernel.particleModified(self._id, {x:newX}) }
-        })
-        Object.defineProperty(roboPoint, "y", {
-          get: function(){ return self._p.y; },
-          set: function(newY){ state.kernel.particleModified(self._id, {y:newY}) }
-        })
-        roboPoint.__proto__ = Point.prototype
-        return roboPoint
+        return new RoboPoint(this)
       },
       set: function(newP) { 
         this._p.x = newP.x
