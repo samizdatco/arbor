@@ -1,12 +1,12 @@
 //
 // system.js
 //
-// the main controller object for creating/modifying graphs 
+// the main controller object for creating/modifying graphs
 //
 
   var ParticleSystem = function(repulsion, stiffness, friction, centerGravity, targetFps, dt, precision){
   // also callable with ({stiffness:, repulsion:, friction:, timestep:, fps:, dt:, gravity:})
-    
+
     var _changes=[]
     var _notification=null
     var _epoch = 0
@@ -87,7 +87,7 @@
           // by the simulation:
           //   'mass' overrides the default of 1
           //   'fixed' overrides the default of false
-          //   'x' & 'y' will set a starting position rather than 
+          //   'x' & 'y' will set a starting position rather than
           //             defaulting to random placement
           var x = (data.x!=undefined) ? data.x : null
           var y = (data.y!=undefined) ? data.y : null
@@ -108,7 +108,7 @@
       // remove a node and its associated edges from the graph
       pruneNode:function(nodeOrName) {
         var node = that.getNode(nodeOrName)
-        
+
         if (typeof(state.nodes[node._id]) !== 'undefined'){
           delete state.nodes[node._id]
           delete state.names[node.name]
@@ -177,7 +177,7 @@
 
         _changes.push({t:"dropSpring", id:edge._id})
         delete state.edges[edge._id]
-        
+
         for (var x in state.adjacency){
           for (var y in state.adjacency[x]){
             var edges = state.adjacency[x][y];
@@ -198,7 +198,7 @@
         node1 = that.getNode(node1)
         node2 = that.getNode(node2)
         if (!node1 || !node2) return []
-        
+
         if (typeof(state.adjacency[node1._id]) !== 'undefined'
           && typeof(state.adjacency[node1._id][node2._id]) !== 'undefined'){
           return state.adjacency[node1._id][node2._id];
@@ -210,7 +210,7 @@
       getEdgesFrom:function(node) {
         node = that.getNode(node)
         if (!node) return []
-        
+
         if (typeof(state.adjacency[node._id]) !== 'undefined'){
           var nodeEdges = []
           $.each(state.adjacency[node._id], function(id, subEdges){
@@ -230,7 +230,7 @@
         $.each(state.edges, function(edgeId, edge){
           if (edge.target == node) nodeEdges.push(edge)
         })
-        
+
         return nodeEdges;
       },
 
@@ -242,10 +242,10 @@
 
 
           if (p1.x==null || p2.x==null) return
-          
+
           p1 = (_screenSize!==null) ? that.toScreen(p1) : p1
           p2 = (_screenSize!==null) ? that.toScreen(p2) : p2
-          
+
           if (p1 && p2) callback.call(that, e, p1, p2);
         })
       },
@@ -272,9 +272,9 @@
         // trace('prune', changes.dropped)
         return changes
       },
-      
+
       graft:function(branch){
-        // branch is of the form: { nodes:{name1:{d}, name2:{d},...}, 
+        // branch is of the form: { nodes:{name1:{d}, name2:{d},...},
         //                          edges:{fromNm:{toNm1:{d}, toNm2:{d}}, ...} }
 
         var changes = {added:{nodes:[], edges:[]}}
@@ -282,13 +282,13 @@
           var oldNode = that.getNode(name)
           // should probably merge any x/y/m data as well...
           // if (oldNode) $.extend(oldNode.data, nodeData)
-          
+
           if (oldNode) oldNode.data = nodeData
           else changes.added.nodes.push( that.addNode(name, nodeData) )
-          
+
           state.kernel.start()
         })
-        
+
         if (branch.edges) $.each(branch.edges, function(src, dsts){
           var srcNode = that.getNode(src)
           if (!srcNode) changes.added.nodes.push( that.addNode(src, {}) )
@@ -330,24 +330,24 @@
                 changes.dropped.edges.push(edge)
               }
         })
-        
+
         var prune_changes = that.prune(function(node, edges){
           if (branch.nodes[node.name] === undefined){
             changes.dropped.nodes.push(node)
             return true
           }
         })
-        var graft_changes = that.graft(branch)        
+        var graft_changes = that.graft(branch)
         changes.added.nodes = changes.added.nodes.concat(graft_changes.added.nodes)
         changes.added.edges = changes.added.edges.concat(graft_changes.added.edges)
         changes.dropped.nodes = changes.dropped.nodes.concat(prune_changes.dropped.nodes)
         changes.dropped.edges = changes.dropped.edges.concat(prune_changes.dropped.edges)
-        
+
         // trace('changes', changes)
         return changes
       },
 
-      
+
       tweenNode:function(nodeOrName, dur, to){
         var node = that.getNode(nodeOrName)
         if (node) state.tween.to(node, dur, to)
@@ -361,7 +361,7 @@
           // called with (node1, node2, dur, to)
           var edges = that.getEdges(a,b)
           $.each(edges, function(i, edge){
-            that._tweenEdge(edge, c, d)    
+            that._tweenEdge(edge, c, d)
           })
         }
       },
@@ -371,7 +371,7 @@
       },
 
       _updateGeometry:function(e){
-        if (e != undefined){          
+        if (e != undefined){
           var stale = (e.epoch<_epoch)
 
           _energy = e.energy
@@ -379,27 +379,27 @@
           if (pts!==undefined){
             for (var i=0, j=pts.length/3; i<j; i++){
               var id = pts[3*i]
-                            
+
               // canary silencer...
               if (stale && state.nodes[id]==undefined) continue
-              
+
               state.nodes[id]._p.x = pts[3*i + 1]
               state.nodes[id]._p.y = pts[3*i + 2]
             }
-          }          
+          }
         }
       },
-      
+
       // convert to/from screen coordinates
       screen:function(opts){
-        if (opts == undefined) return {size:(_screenSize)? objcopy(_screenSize) : undefined, 
-                                       padding:_screenPadding.concat(), 
+        if (opts == undefined) return {size:(_screenSize)? objcopy(_screenSize) : undefined,
+                                       padding:_screenPadding.concat(),
                                        step:_screenStep}
         if (opts.size!==undefined) that.screenSize(opts.size.width, opts.size.height)
         if (!isNaN(opts.step)) that.screenStep(opts.step)
         if (opts.padding!==undefined) that.screenPadding(opts.padding)
       },
-      
+
       screenSize:function(canvasWidth, canvasHeight){
         _screenSize = {width:canvasWidth,height:canvasHeight}
         that._updateBounds()
@@ -414,7 +414,7 @@
         var bot = trbl[2]
         if (right===undefined) trbl = [top,top,top,top]
         else if (bot==undefined) trbl = [top,right,top,right]
-        
+
         _screenPadding = trbl
       },
 
@@ -434,7 +434,7 @@
         // return arbor.Point(Math.floor(sx), Math.floor(sy))
         return arbor.Point(sx, sy)
       },
-      
+
       fromScreen:function(s) {
         if (!_bounds || !_screenSize) return
 
@@ -449,12 +449,12 @@
       _updateBounds:function(newBounds){
         // step the renderer's current bounding box closer to the true box containing all
         // the nodes. if _screenStep is set to 1 there will be no lag. if _screenStep is
-        // set to 0 the bounding box will remain stationary after being initially set 
+        // set to 0 the bounding box will remain stationary after being initially set
         if (_screenSize===null) return
-        
+
         if (newBounds) _boundsTarget = newBounds
         else _boundsTarget = that.bounds()
-        
+
         // _boundsTarget = newBounds || that.bounds()
         // _boundsTarget.topleft = new Point(_boundsTarget.topleft.x,_boundsTarget.topleft.y)
         // _boundsTarget.bottomright = new Point(_boundsTarget.bottomright.x,_boundsTarget.bottomright.y)
@@ -477,21 +477,21 @@
           _bounds = _boundsTarget
           return true
         }
-        
+
         // var stepSize = (Math.max(dims.x,dims.y)<MINSIZE) ? .2 : _screenStep
         var stepSize = _screenStep
         _newBounds = {
           bottomright: _bounds.bottomright.add( _boundsTarget.bottomright.subtract(_bounds.bottomright).multiply(stepSize) ),
           topleft: _bounds.topleft.add( _boundsTarget.topleft.subtract(_bounds.topleft).multiply(stepSize) )
         }
-        
+
         // return true if we're still approaching the target, false if we're ‘close enough’
-        var diff = new Point(_bounds.topleft.subtract(_newBounds.topleft).magnitude(), _bounds.bottomright.subtract(_newBounds.bottomright).magnitude())        
+        var diff = new Point(_bounds.topleft.subtract(_newBounds.topleft).magnitude(), _bounds.bottomright.subtract(_newBounds.bottomright).magnitude())
         if (diff.x*_screenSize.width>1 || diff.y*_screenSize.height>1){
           _bounds = _newBounds
           return true
         }else{
-         return false        
+         return false
         }
       },
 
@@ -513,11 +513,11 @@
             topleft = new Point(node._p)
             return
           }
-        
+
           var point = node._p
           if (point.x===null || point.y===null) return
           if (point.x > bottomright.x) bottomright.x = point.x;
-          if (point.y > bottomright.y) bottomright.y = point.y;          
+          if (point.y > bottomright.y) bottomright.y = point.y;
           if   (point.x < topleft.x)   topleft.x = point.x;
           if   (point.y < topleft.y)   topleft.y = point.y;
         })
@@ -536,10 +536,10 @@
         if (_screenSize!==null) pos = that.fromScreen(pos)
         // if screen size has been specified, presume pos is in screen pixel
         // units and convert it back to the particle system coordinates
-        
+
         var min = {node: null, point: null, distance: null};
         var t = that;
-        
+
         $.each(state.nodes, function(id, node){
           var pt = node._p
           if (pt.x===null || pt.y===null) return
@@ -549,7 +549,7 @@
             if (_screenSize!==null) min.screenPoint = that.toScreen(pt)
           }
         })
-        
+
         if (min.node){
           if (_screenSize!==null) min.distance = that.toScreen(min.node.p).subtract(that.toScreen(pos)).magnitude()
            return min
@@ -563,7 +563,7 @@
         // (using a short timeout to batch changes)
         if (_notification===null) _epoch++
         else clearTimeout(_notification)
-        
+
         _notification = setTimeout(that._synchronize,20)
         // that._synchronize()
       },
@@ -574,44 +574,57 @@
           _notification = null
         }
       },
-    }    
-    
+    }
+
     state.kernel = Kernel(that)
     state.tween = state.kernel.tween || null
-    
+
     // some magic attrs to make the Node objects phone-home their physics-relevant changes
-    Node.prototype.__defineGetter__("p", function() { 
-      var self = this
-      var roboPoint = {}
-      roboPoint.__defineGetter__('x', function(){ return self._p.x; })
-      roboPoint.__defineSetter__('x', function(newX){ state.kernel.particleModified(self._id, {x:newX}) })
-      roboPoint.__defineGetter__('y', function(){ return self._p.y; })
-      roboPoint.__defineSetter__('y', function(newY){ state.kernel.particleModified(self._id, {y:newY}) })
-      roboPoint.__proto__ = Point.prototype
-      return roboPoint
-    })
-    Node.prototype.__defineSetter__("p", function(newP) { 
-      this._p.x = newP.x
-      this._p.y = newP.y
-      state.kernel.particleModified(this._id, {x:newP.x, y:newP.y})
-    })
+    Object.defineProperty
+    (Node.prototype, "p", {
+       get:function() {
+	 var self = this
+	 var roboPoint = {}
+	 roboPoint.__defineGetter__('x', function(){ return self._p.x; })
+	 roboPoint.__defineSetter__('x', function(newX){ state.kernel.particleModified(self._id, {x:newX}) })
+	 roboPoint.__defineGetter__('y', function(){ return self._p.y; })
+	 roboPoint.__defineSetter__('y', function(newY){ state.kernel.particleModified(self._id, {y:newY}) })
+	 roboPoint.__proto__ = Point.prototype
+	 return roboPoint
+       },
+       set:function(newP) {
+	 this._p.x = newP.x
+	 this._p.y = newP.y
+	 state.kernel.particleModified(this._id, {x:newP.x, y:newP.y})
+       }
+     }
+    );
 
-    Node.prototype.__defineGetter__("mass", function() { return this._mass; });
-    Node.prototype.__defineSetter__("mass", function(newM) { 
-      this._mass = newM
-      state.kernel.particleModified(this._id, {m:newM})
-    })
+    Object.defineProperty
+    (Node.prototype, "mass", {
+       get:function() { return this._mass; },
+       set:function(newM) {
+	 this._mass = newM
+	 state.kernel.particleModified(this._id, {m:newM})
+       }
+     }
+    );
 
-    Node.prototype.__defineSetter__("tempMass", function(newM) { 
+    /*
+    Node.prototype.__defineSetter__("tempMass", function(newM) {
       state.kernel.particleModified(this._id, {_m:newM})
     })
-      
-    Node.prototype.__defineGetter__("fixed", function() { return this._fixed; });
-    Node.prototype.__defineSetter__("fixed", function(isFixed) { 
-      this._fixed = isFixed
-      state.kernel.particleModified(this._id, {f:isFixed?1:0})
-    })
-    
+     */
+
+    Object.defineProperty
+    (Node.prototype, "fixed", {
+       add:function() { return this._fixed; },
+       set:function(isFixed) {
+	 this._fixed = isFixed
+	 state.kernel.particleModified(this._id, {f:isFixed?1:0})
+       }
+     }
+    );
+
     return that
   }
-  
