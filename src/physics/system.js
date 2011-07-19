@@ -579,18 +579,41 @@
     state.kernel = Kernel(that)
     state.tween = state.kernel.tween || null
 
+    // Firefox 3 doesn't support defineProperty, so we set it here
+    if (typeof Object.defineProperty != 'function'){
+      Object.defineProperty = function(obj, prop, descriptor){
+	for (var gs in descriptor){
+	  if (gs == 'get'){
+	    obj.__defineGetter__(prop, descriptor[gs]);
+	  } else if (gs == 'set'){
+	    obj.__defineSetter__(prop, descriptor[gs]);
+	  }
+	}
+      };
+    }
+
     // some magic attrs to make the Node objects phone-home their physics-relevant changes
     Object.defineProperty
     (Node.prototype, "p", {
        get:function() {
 	 var self = this
 	 var roboPoint = {}
-	 roboPoint.__defineGetter__('x', function(){ return self._p.x; })
-	 roboPoint.__defineSetter__('x', function(newX){ state.kernel.particleModified(self._id, {x:newX}) })
-	 roboPoint.__defineGetter__('y', function(){ return self._p.y; })
-	 roboPoint.__defineSetter__('y', function(newY){ state.kernel.particleModified(self._id, {y:newY}) })
-	 roboPoint.__proto__ = Point.prototype
-	 return roboPoint
+
+	 Object.defineProperty
+	 (roboPoint, 'x', {
+	    get:function(){ return self._p.x; },
+	    set:function(newX){ state.kernel.particleModified(self._id, {x:newX}) }
+	  }
+	 );
+
+	 Object.defineProperty
+	 (roboPoint, 'y', {
+	    get:function(){ return self._p.y; },
+	    set:function(newY){ state.kernel.particleModified(self._id, {y:newY}) }
+	  }
+	 );
+	 roboPoint.__proto__ = Point.prototype;
+	 return roboPoint;
        },
        set:function(newP) {
 	 this._p.x = newP.x
