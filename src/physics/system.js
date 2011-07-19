@@ -582,12 +582,11 @@
     // Firefox 3 doesn't support defineProperty, so we set it here
     if (typeof Object.defineProperty != 'function'){
       Object.defineProperty = function(obj, prop, descriptor){
-	for (var gs in descriptor){
-	  if (gs == 'get'){
-	    obj.__defineGetter__(prop, descriptor[gs]);
-	  } else if (gs == 'set'){
-	    obj.__defineSetter__(prop, descriptor[gs]);
-	  }
+	if (descriptor.get){
+	  obj.__defineGetter__(prop, descriptor.get);
+	}
+	if (descriptor.set) {
+	  obj.__defineSetter__(prop, descriptor.set);
 	}
       };
     }
