@@ -594,6 +594,7 @@
     var RoboPoint = function (n) {
       this._n = n;
     }
+    RoboPoint.prototype = new Point();
     defineProperty(RoboPoint.prototype, "x", {
       get: function(){ return this._n._p.x; },
       set: function(newX){ state.kernel.particleModified(this._n._id, {x:newX}) }
@@ -602,7 +603,6 @@
       get: function(){ return this._n._p.y; },
       set: function(newY){ state.kernel.particleModified(this._n._id, {y:newY}) }
     })
-    RoboPoint.prototype = Point.prototype;
 
     defineProperty(Node.prototype, "p", {
       get: function() { 
