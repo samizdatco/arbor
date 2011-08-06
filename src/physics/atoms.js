@@ -92,18 +92,26 @@ Point.prototype = {
   	return this.divide(this.magnitude());
   },
   radian:function(n){
-    var p = this.subtract(n);
+    var p = n.subtract(this);
     rad = Math.acos(Math.abs(p.x)/p.magnitude());
+
     if(p.x<0){
       if(p.y<0){
-	rad += Math.PI;
+	//console.log('a', rad);
       }else{
-	rad -= Math.PI;
+	rad *= -1;
+	//console.log('b',rad);
       }
     }else if(p.y<0){
+      rad += Math.PI;
       rad *= -1;
+      //console.log('c',rad);
+    }else{
+      rad += Math.PI;
+      //console.log('d',rad);
     }
+
     return rad;
   }
-}
+};
 
