@@ -95,6 +95,8 @@ Point.prototype = {
     var p = n.subtract(this);
     rad = Math.acos(Math.abs(p.x)/p.magnitude());
 
+    // I'm sure there is a better way to do this. I think my
+    // trig book is in the attic some place
     if(p.x<0){
       if(p.y<0){
 	//console.log('a', rad);
