@@ -17,8 +17,8 @@
     var _bounds = null
     var _boundsTarget = null
 
-    if (typeof stiffness=='object'){
-      var _p = stiffness
+    if (typeof repulsion=='object'){
+      var _p = repulsion
       friction = _p.friction
       repulsion = _p.repulsion
       targetFps = _p.fps
