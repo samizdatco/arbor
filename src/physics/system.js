@@ -234,6 +234,10 @@
         return nodeEdges;
       },
 
+      edgeCount:function(node){
+	return that.getEdgesFrom(node).length + that.getEdgesTo(node).length;
+      },
+
       eachEdge:function(callback){
         // callback should accept two arguments: Edge, Point
         $.each(state.edges, function(id, e){
