@@ -577,8 +577,8 @@
           _changes = []
           _notification = null
         }
-      },
-    }
+      }
+    };
 
     state.kernel = Kernel(that)
     state.tween = state.kernel.tween || null
