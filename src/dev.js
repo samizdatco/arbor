@@ -36,7 +36,7 @@
       encode:Colors.encode,     // ƒ({r,g,b,a}) -> hexOrRgbaString
       blend:Colors.blend        // ƒ(color, opacity) -> rgbaString
     },
-    etc:{      
+    etc:{
       trace:trace,              // ƒ(msg) -> safe console logging
       dirname:dirname,          // ƒ(path) -> leading part of path
       basename:basename,        // ƒ(path) -> trailing part of path
@@ -46,10 +46,9 @@
       objkeys:objkeys,          // ƒ(obj) -> array of all keys in obj
       objmerge:objmerge,        // ƒ(dst, src) -> like $.extend but non-destructive
       uniq:uniq,                // ƒ(arr) -> array of unique items in arr
-      arbor_path:arbor_path,    // ƒ() -> guess the directory of the lib code
+      arbor_path:arbor_path     // ƒ() -> guess the directory of the lib code
     }
-  })
+  });
 
-  
-})()
+ })();
 

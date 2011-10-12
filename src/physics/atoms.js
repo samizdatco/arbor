@@ -9,7 +9,7 @@ var Node = function(data){
 	this.data = data || {};  // the user-serviceable parts
 	this._mass = (data.mass!==undefined) ? data.mass : 1
 	this._fixed = (data.fixed===true) ? true : false
-	this._p = new Point((typeof(data.x)=='number') ? data.x : null, 
+	this._p = new Point((typeof(data.x)=='number') ? data.x : null,
                      (typeof(data.y)=='number') ? data.y : null)
   delete this.data.x
   delete this.data.y
@@ -58,7 +58,7 @@ var Point = function(x, y){
     y = x.y; x=x.x;
   }
   this.x = x;
-  this.y = y;  
+  this.y = y;
 }
 
 Point.random = function(radius){
@@ -90,6 +90,30 @@ Point.prototype = {
   },
   normalize:function(){
   	return this.divide(this.magnitude());
+  },
+  radian:function(n){
+    var p = n.subtract(this);
+    rad = Math.acos(Math.abs(p.x)/p.magnitude());
+
+    // I'm sure there is a better way to do this. I think my
+    // trig book is in the attic some place
+    if(p.x<0){
+      if(p.y<0){
+	//console.log('a', rad);
+      }else{
+	rad *= -1;
+	//console.log('b',rad);
+      }
+    }else if(p.y<0){
+      rad += Math.PI;
+      rad *= -1;
+      //console.log('c',rad);
+    }else{
+      rad += Math.PI;
+      //console.log('d',rad);
+    }
+
+    return rad;
   }
-}
+};
 

@@ -31,7 +31,7 @@
         <p>The parameters and their defaults are:</p>
         <ul>
           <li><em>repulsion </em><b>1,000</b> the force repelling nodes from each other</li>
-          <li><em>stiffness </em><b>600</b> the rigidity of the edges </li>
+          <li><em>stiffness </em><b>600</b> the rigidity of the edges (reduce to prevent shaking)</li>
           <li><em>friction </em><b>0.5</b> the amount of damping in the system </li>
           <li><em>gravity </em><b>false</b> an additional force attracting nodes to the origin </li>
           <li><em>fps </em><b>55</b> frames per second </li>
@@ -572,6 +572,8 @@
         <dd>Returns the point’s vector normal.</dd>
         <dt>normalize<em>( ) &rarr; Point</em></dt>
         <dd>Returns a scaled copy of the point with a magnitude of one.</dd>
+        <dt>radian<em>(pt) &rarr; Number</em></dt>
+        <dd>Returns the angle in radians to the given point.</dd>
       </dl>
       <h2>sanity checking</h2>
       <dl>
