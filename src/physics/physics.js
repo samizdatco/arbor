@@ -132,7 +132,7 @@
 
       tick:function(){
         that.tendParticles()
-        that.eulerIntegrator(that.dt)
+        that.verletVelocityIntegrator(that.dt)
         that.tock()
       },
 
@@ -167,9 +167,7 @@
 
       },
       
-      
-      // Physics stuff
-      eulerIntegrator:function(dt){
+      updateAllForces:function() {
         if (that.repulsion>0){
           if (that.theta>0) that.applyBarnesHutRepulsion()
           else that.applyBruteForceRepulsion()
@@ -177,8 +175,31 @@
         if (that.stiffness>0) that.applySprings()
         that.applyCenterDrift()
         if (that.gravity) that.applyCenterGravity()
-        that.updateVelocity(dt)
-        that.updatePosition(dt)
+      
+      
+      },
+      
+      
+      // Physics stuff
+      verletVelocityIntegrator:function(dt){
+        //here we will use Verlet integration. First, update all the forces to get f(t)
+        that.updateAllForces();
+        
+        //next, save this value so we can hold on to f(t)
+        that.saveForces();
+        
+        //now, update our position to obtain x(t + 1)
+        that.updatePosition(dt);
+        
+        //now, update forces again to get f(t+1). Yes, the force calculations are performed twice
+        //every timestep, but I don't believe the force calculations are the majority of the CPU work
+        that.updateAllForces();
+        
+        //now that we have f(t+1) and f(t), use this to update our velocity. Note: this assumes that the mass
+        //stays constant across timesteps (since a(t) and f(t) are only separated by a scalar). If the mass changes
+        //between a timestep, we could easily account for this by saving a(t) instead of f(t)
+        
+        that.updateVelocity(dt);
       },
 
       applyBruteForceRepulsion:function(){
@@ -264,6 +285,12 @@
         });
       },
       
+      saveForces:function() {
+        $.each(active.particles, function(id, point) {
+           point.oldF = point.f;
+        });
+      },
+      
       updateVelocity:function(timestep){
         // translate forces to a new velocity for this particle
         $.each(active.particles, function(id, point) {
@@ -274,7 +301,10 @@
           }
 
           var was = point.v.magnitude()
-          point.v = point.v.add(point.f.multiply(timestep)).multiply(1-that.friction);
+          //average the old and new forces
+          point.v = point.v.add(point.f.add(point.oldF).multiply(timestep*0.5)).multiply(1-that.friction);
+          //old code below:
+          //point.v = point.v.add(point.f.multiply(timestep)).multiply(1-that.friction);
           point.f.x = point.f.y = 0
 
           var speed = point.v.magnitude()          
@@ -290,7 +320,13 @@
 
         $.each(active.particles, function(i, point) {
           // move the node to its new position
-          point.p = point.p.add(point.v.multiply(timestep));
+
+          //this should follow the equation
+          //x(t+1) = x(t) + v(t) * timestep + 1/2 * timestep^2 * a(t)
+
+          //we also need the 1/2 a t^2 here:
+          var accelPart = point.f.multiply(0.5 * timestep * timestep);
+          point.p = point.p.add(point.v.multiply(timestep)).add(accelPart);
           
           // keep stats to report in systemEnergy
           var speed = point.v.magnitude();
