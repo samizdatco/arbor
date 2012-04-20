@@ -381,7 +381,7 @@
               var id = pts[3*i]
                             
               // canary silencer...
-              if (stale && state.nodes[id]==undefined) continue
+              if (stale && state.nodes[id]==undefined) continue;
               
               state.nodes[id]._p.x = pts[3*i + 1]
               state.nodes[id]._p.y = pts[3*i + 2]
