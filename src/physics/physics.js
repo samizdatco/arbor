@@ -205,6 +205,11 @@
       
       applyBarnesHutRepulsion:function(){
         if (!_bounds.topleft || !_bounds.bottomright) return
+        var nParticles = 0;
+         for (var particle in active.particles)
+            nParticles++;
+         if (nParticles < 2) return
+         
         var bottomright = new Point(_bounds.bottomright)
         var topleft = new Point(_bounds.topleft)
 
@@ -248,7 +253,7 @@
           numParticles++
         });
 
-        if (numParticles==0) return
+        if (numParticles < 2) return
         
         var correction = centroid.divide(-numParticles)
         $.each(active.particles, function(id, point) {
@@ -314,7 +319,8 @@
         });
         
         _energy = {sum:sum, max:max, mean:sum/n, n:n}
-        _bounds = {topleft:topleft||new Point(-1,-1), bottomright:bottomright||new Point(1,1)}
+        if (n > 1)
+          _bounds = {topleft:topleft||new Point(-1,-1), bottomright:bottomright||new Point(1,1)}
       },
 
       systemEnergy:function(timestep){
