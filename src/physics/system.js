@@ -4,8 +4,8 @@
 // the main controller object for creating/modifying graphs 
 //
 
-  var ParticleSystem = function(repulsion, stiffness, friction, centerGravity, targetFps, dt, precision){
-  // also callable with ({stiffness:, repulsion:, friction:, timestep:, fps:, dt:, gravity:})
+  var ParticleSystem = function(repulsion, stiffness, friction, centerGravity, targetFps, dt, precision, integrator){
+  // also callable with ({integrator:, stiffness:, repulsion:, friction:, timestep:, fps:, dt:, gravity:})
     
     var _changes=[]
     var _notification=null
@@ -17,8 +17,8 @@
     var _bounds = null
     var _boundsTarget = null
 
-    if (typeof stiffness=='object'){
-      var _p = stiffness
+    if (typeof repulsion=='object'){
+      var _p = repulsion
       friction = _p.friction
       repulsion = _p.repulsion
       targetFps = _p.fps
@@ -26,8 +26,11 @@
       stiffness = _p.stiffness
       centerGravity = _p.gravity
       precision = _p.precision
+      integrator = _p.integrator
     }
 
+    // param validation and defaults
+    if (integrator!='verlet' && integrator!='euler') integrator='verlet'
     friction = isNaN(friction) ? .5 : friction
     repulsion = isNaN(repulsion) ? 1000 : repulsion
     targetFps = isNaN(targetFps) ? 55 : targetFps
@@ -35,8 +38,9 @@
     dt = isNaN(dt) ? 0.02 : dt
     precision = isNaN(precision) ? .6 : precision
     centerGravity = (centerGravity===true)
+
     var _systemTimeout = (targetFps!==undefined) ? 1000/targetFps : 1000/50
-    var _parameters = {repulsion:repulsion, stiffness:stiffness, friction:friction, dt:dt, gravity:centerGravity, precision:precision, timeout:_systemTimeout}
+    var _parameters = {integrator:integrator, repulsion:repulsion, stiffness:stiffness, friction:friction, dt:dt, gravity:centerGravity, precision:precision, timeout:_systemTimeout}
     var _energy
 
     var state = {
@@ -68,10 +72,10 @@
         else that.parameters({timeout:1000/(newFPS||50)})
       },
 
-
       start:function(){
         state.kernel.start()
       },
+
       stop:function(){
         state.kernel.stop()
       },

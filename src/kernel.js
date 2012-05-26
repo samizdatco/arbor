@@ -9,7 +9,7 @@
     var chrome_local_file = window.location.protocol == "file:" &&
                             navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
     var USE_WORKER = (window.Worker !== undefined && !chrome_local_file)    
-
+    
     var _physics = null
     var _tween = null
     var _fpsWindow = [] // for keeping track of the actual frame rate
@@ -36,7 +36,7 @@
         var params = pSystem.parameters()
                 
         if(USE_WORKER){
-          trace('using web workers')
+          trace('arbor.js/web-workers',params)
           _screenInterval = setInterval(that.screenUpdate, params.timeout)
 
           _physics = new Worker(arbor_path()+'physics/worker.js')
@@ -46,8 +46,8 @@
                                 physics:objmerge(params, 
                                                 {timeout:Math.ceil(params.timeout)}) })
         }else{
-          trace("couldn't use web workers, be careful...")
-          _physics = Physics(params.dt, params.stiffness, params.repulsion, params.friction, that.system._updateGeometry)
+          trace('arbor.js/single-threaded',params)
+          _physics = Physics(params.dt, params.stiffness, params.repulsion, params.friction, that.system._updateGeometry, params.integrator)
           that.start()
         }
 

@@ -13,6 +13,7 @@
 //   <script src="js/src/tween/easing.js"></script>
 //   <script src="js/src/tween/tween.js"></script>
 //   <script src="js/src/physics/atoms.js"></script>
+//   <script src="js/src/physics/barnes-hut.js"></script>
 //   <script src="js/src/physics/physics.js"></script>
 //   <script src="js/src/physics/system.js"></script>
 //   <script src="js/src/dev.js"></script>
