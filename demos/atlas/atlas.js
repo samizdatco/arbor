@@ -126,7 +126,7 @@
       		selected = nearest = dragged = particleSystem.nearest(p);
 
       		if (selected.node !== null){
-            // dragged.node.tempMass = 10000
+            dragged.node.tempMass = 50
             dragged.node.fixed = true
       		}
       		return false
@@ -143,7 +143,7 @@
       		if (dragged !== null && dragged.node !== null){
             var p = particleSystem.fromScreen(s)
       			dragged.node.p = {x:p.x, y:p.y}
-            // dragged.tempMass = 10000
+                dragged.tempMass = 50
       		}
 
           return false
@@ -152,7 +152,7 @@
       	$(window).bind('mouseup',function(e){
           if (dragged===null || dragged.node===undefined) return
           dragged.node.fixed = false
-          dragged.node.tempMass = 100
+          dragged.node.tempMass = 1
       		dragged = null;
       		selected = null
       		return false

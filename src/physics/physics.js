@@ -194,6 +194,7 @@
         // keep a snapshot of the current forces for the verlet integrator
         $.each(active.particles, function(id, point) {
            point._F = point.f;
+           point._m = point.m;
         });
       },
       
@@ -293,7 +294,7 @@
           if (that.integrator=='euler'){
             point.v = point.v.add(point.f.multiply(timestep)).multiply(1-that.friction);
           }else{
-            point.v = point.v.add(point.f.add(point._F).multiply(timestep*0.5)).multiply(1-that.friction);
+            point.v = point.v.add(point.f.add(point._F.divide(point._m)).multiply(timestep*0.5)).multiply(1-that.friction);
           }
           point.f.x = point.f.y = 0
 
@@ -323,7 +324,7 @@
           }else{
             //this should follow the equation
             //x(t+1) = x(t) + v(t) * timestep + 1/2 * timestep^2 * a(t)
-            var accelPart = point.f.multiply(0.5 * timestep * timestep);
+            var accelPart = point.f.multiply(0.5 * timestep * timestep).divide(point.m);
             point.p = point.p.add(point.v.multiply(timestep)).add(accelPart);
           }
           
