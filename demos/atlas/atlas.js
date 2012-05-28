@@ -126,7 +126,7 @@
       		selected = nearest = dragged = particleSystem.nearest(p);
 
       		if (selected.node !== null){
-            // dragged.node.tempMass = 10000
+            dragged.node.tempMass = 50
             dragged.node.fixed = true
       		}
       		return false
