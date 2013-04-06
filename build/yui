@@ -1,0 +1,3 @@
+#!/bin/sh
+
+java -jar /Users/cvoigt/git/arbor/build/.yui/yuicompressor-2.4.6.jar $@
