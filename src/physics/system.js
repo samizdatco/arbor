@@ -4,8 +4,8 @@
 // the main controller object for creating/modifying graphs 
 //
 
-  var ParticleSystem = function(repulsion, stiffness, friction, centerGravity, targetFps, dt, precision, integrator){
-  // also callable with ({integrator:, stiffness:, repulsion:, friction:, timestep:, fps:, dt:, gravity:})
+  var ParticleSystem = function(repulsion, stiffness, friction, centerGravity, targetFps, dt, precision, integrator, workerUrl){
+  // also callable with ({workerUrl:, integrator:, stiffness:, repulsion:, friction:, timestep:, fps:, dt:, gravity:})
     
     var _changes=[]
     var _notification=null
@@ -27,6 +27,7 @@
       centerGravity = _p.gravity
       precision = _p.precision
       integrator = _p.integrator
+      workerUrl =_p.workerUrl
     }
 
     // param validation and defaults
@@ -40,7 +41,7 @@
     centerGravity = (centerGravity===true)
 
     var _systemTimeout = (targetFps!==undefined) ? 1000/targetFps : 1000/50
-    var _parameters = {integrator:integrator, repulsion:repulsion, stiffness:stiffness, friction:friction, dt:dt, gravity:centerGravity, precision:precision, timeout:_systemTimeout}
+    var _parameters = {workerUrl:workerUrl, integrator:integrator, repulsion:repulsion, stiffness:stiffness, friction:friction, dt:dt, gravity:centerGravity, precision:precision, timeout:_systemTimeout}
     var _energy
 
     var state = {
@@ -101,6 +102,39 @@
           node.name = name
           state.names[name] = node
           state.nodes[node._id] = node;
+
+	  // some magic attrs to make the Node objects phone-home their physics-relevant changes
+	  node.__defineGetter__("p", function() {
+	    var self = this
+	    var roboPoint = {}
+	    roboPoint.__defineGetter__('x', function(){ return self._p.x; })
+	    roboPoint.__defineSetter__('x', function(newX){ state.kernel.particleModified(self._id, {x:newX}) })
+	    roboPoint.__defineGetter__('y', function(){ return self._p.y; })
+	    roboPoint.__defineSetter__('y', function(newY){ state.kernel.particleModified(self._id, {y:newY}) })
+	    roboPoint.__proto__ = Point.prototype
+	    return roboPoint
+	  })
+	  node.__defineSetter__("p", function(newP) {
+	    this._p.x = newP.x
+	    this._p.y = newP.y
+	    state.kernel.particleModified(this._id, {x:newP.x, y:newP.y})
+	  })
+
+	  node.__defineGetter__("mass", function() { return this._mass; });
+	  node.__defineSetter__("mass", function(newM) {
+	    this._mass = newM
+	    state.kernel.particleModified(this._id, {m:newM})
+	  })
+
+	  node.__defineSetter__("tempMass", function(newM) {
+	    state.kernel.particleModified(this._id, {_m:newM})
+	  })
+
+	  node.__defineGetter__("fixed", function() { return this._fixed; });
+	  node.__defineSetter__("fixed", function(isFixed) {
+	    this._fixed = isFixed
+	    state.kernel.particleModified(this._id, {f:isFixed?1:0})
+	  })
 
           _changes.push({t:"addNode", id:node._id, m:node.mass, x:x, y:y, f:fixed})
           that._notify();
@@ -582,39 +616,41 @@
     
     state.kernel = Kernel(that)
     state.tween = state.kernel.tween || null
-    
-    // some magic attrs to make the Node objects phone-home their physics-relevant changes
-    Node.prototype.__defineGetter__("p", function() { 
-      var self = this
-      var roboPoint = {}
-      roboPoint.__defineGetter__('x', function(){ return self._p.x; })
-      roboPoint.__defineSetter__('x', function(newX){ state.kernel.particleModified(self._id, {x:newX}) })
-      roboPoint.__defineGetter__('y', function(){ return self._p.y; })
-      roboPoint.__defineSetter__('y', function(newY){ state.kernel.particleModified(self._id, {y:newY}) })
-      roboPoint.__proto__ = Point.prototype
-      return roboPoint
-    })
-    Node.prototype.__defineSetter__("p", function(newP) { 
-      this._p.x = newP.x
-      this._p.y = newP.y
-      state.kernel.particleModified(this._id, {x:newP.x, y:newP.y})
-    })
 
-    Node.prototype.__defineGetter__("mass", function() { return this._mass; });
-    Node.prototype.__defineSetter__("mass", function(newM) { 
-      this._mass = newM
-      state.kernel.particleModified(this._id, {m:newM})
-    })
-
-    Node.prototype.__defineSetter__("tempMass", function(newM) { 
-      state.kernel.particleModified(this._id, {_m:newM})
-    })
-      
-    Node.prototype.__defineGetter__("fixed", function() { return this._fixed; });
-    Node.prototype.__defineSetter__("fixed", function(isFixed) { 
-      this._fixed = isFixed
-      state.kernel.particleModified(this._id, {f:isFixed?1:0})
-    })
+    /* Workaround for multiple particle systems do not work */
+    /*   Moved to ParticleSystem.addNode() */
+    // // some magic attrs to make the Node objects phone-home their physics-relevant changes
+    // Node.prototype.__defineGetter__("p", function() { 
+    //   var self = this
+    //   var roboPoint = {}
+    //   roboPoint.__defineGetter__('x', function(){ return self._p.x; })
+    //   roboPoint.__defineSetter__('x', function(newX){ state.kernel.particleModified(self._id, {x:newX}) })
+    //   roboPoint.__defineGetter__('y', function(){ return self._p.y; })
+    //   roboPoint.__defineSetter__('y', function(newY){ state.kernel.particleModified(self._id, {y:newY}) })
+    //   roboPoint.__proto__ = Point.prototype
+    //   return roboPoint
+    // })
+    // Node.prototype.__defineSetter__("p", function(newP) { 
+    //   this._p.x = newP.x
+    //   this._p.y = newP.y
+    //   state.kernel.particleModified(this._id, {x:newP.x, y:newP.y})
+    // })
+    //
+    // Node.prototype.__defineGetter__("mass", function() { return this._mass; });
+    // Node.prototype.__defineSetter__("mass", function(newM) { 
+    //   this._mass = newM
+    //   state.kernel.particleModified(this._id, {m:newM})
+    // })
+    //
+    // Node.prototype.__defineSetter__("tempMass", function(newM) { 
+    //   state.kernel.particleModified(this._id, {_m:newM})
+    // })
+    //       
+    // Node.prototype.__defineGetter__("fixed", function() { return this._fixed; });
+    // Node.prototype.__defineSetter__("fixed", function(isFixed) { 
+    //   this._fixed = isFixed
+    //   state.kernel.particleModified(this._id, {f:isFixed?1:0})
+    // })
     
     return that
   }
