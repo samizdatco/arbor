@@ -59,11 +59,19 @@
       }
 
       s = s.replace(/([ \t]*)?;.*$/,'') // screen out comments
-
+      // Keep track on escape character '\'
+      var escaping = false;
       for (var i=0, j=s.length;;){
         var c = s[i]
         if (c===undefined) break
-        if (c=='-'){
+        // Start escaping
+        if (!escaping && c == '\\') {
+            // Skip escape character
+            escaping = true;
+            i++;
+            continue;
+        }
+        if (!escaping && c=='-'){
           if (s[i+1]=='>' || s[i+1]=='-'){
             flush()
             var edge = s.substr(i,2)
@@ -73,7 +81,7 @@
             buf += c
             i++
           }
-        }else if (c=='{'){
+        }else if (!escaping && c=='{'){
           var objStr = recognize(s.substr(i))
           if (objStr.length==0){
             buf += c
@@ -88,6 +96,8 @@
           }
         }else{
           buf += c
+          // Escape one character, that enough
+          if (escaping) escaping = false;
           i++
         }
         if (i>=j){
