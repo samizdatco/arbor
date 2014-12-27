@@ -267,7 +267,12 @@ var Graphics = function(canvas){
         ctx.fillStyle = Colors.blend(color, alpha)
         
         // if (alpha>0) ctx.fillText(textStr, style.x, style.y);        
-        if (alpha>0) ctx.fillText(textStr, Math.round(style.x), style.y);        
+	var texts=textStr.split("<br>");
+	style.y = style.y - ((parseInt(ctx.font)+2)*(texts.length-1))/2;
+	for (var k in texts) {
+        if (alpha>0) ctx.fillText(texts[k], Math.round(style.x), (style.y+((parseInt(ctx.font)+2)*k)));        
+		  //  ctx.fillText(texts[k], left, (top+((parseInt(ctx.font)+2)*k)));
+	}
       ctx.restore()
     },
 
@@ -275,7 +280,12 @@ var Graphics = function(canvas){
       style = objmerge(_fontStyle, style||{})
       ctx.save()
         ctx.font = nano("{size}px {font}", style)
-        var width = ctx.measureText(textStr).width			  
+var texts=textStr.split("<br>");
+var textStrMax = "";
+var width = 0; 			  
+	for (var k in texts) {
+		width = width < ctx.measureText(texts[k]).width ? ctx.measureText(texts[k]).width : width
+	}
       ctx.restore()
       return width
     },
