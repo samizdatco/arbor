@@ -72,8 +72,8 @@
         else that.parameters({timeout:1000/(newFPS||50)})
       },
 
-      start:function(){
-        state.kernel.start()
+      start:function(unpause){
+        state.kernel.start(unpause)
       },
 
       stop:function(){
