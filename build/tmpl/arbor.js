@@ -1,6 +1,6 @@
 //
 //  arbor.js - version 0.91
-//  a graph vizualization toolkit
+//  a graph visualization toolkit
 //
 {{LICENSE}}
 

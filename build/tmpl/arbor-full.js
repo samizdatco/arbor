@@ -1,6 +1,6 @@
 //
 //  arbor.js
-//  a graph vizualization toolkit
+//  a graph visualization toolkit
 //
 {{LICENSE}}
 
